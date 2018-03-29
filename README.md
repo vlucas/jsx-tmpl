@@ -4,6 +4,12 @@ Build JSX using native ES6 templates. No transpiling required for Node.js and mo
 * Returns strings for fast rendering on the server
 * Returns a full JSX virtual DOM on the client
 
+## Installation
+
+```
+npm i jsx-tmpl --save
+```
+
 ## Usage
 
 Just use the `jsx` tagged template literal and write normal HTML markup inside native ES6 templates.
