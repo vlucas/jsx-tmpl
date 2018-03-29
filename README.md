@@ -9,7 +9,7 @@ Build JSX using native ES6 templates. No transpiling required for Node.js and mo
 Just use the `jsx` tagged template literal and write normal HTML markup inside native ES6 templates.
 
 ```javascript
-const { jsx } = require('jsx-native');
+const { jsx } = require('jsx-tmpl');
 const Greeting = require('./Greeting');
 const React = require('react');
 
