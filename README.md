@@ -13,7 +13,7 @@ const { jsx } = require('jsx-native');
 const Greeting = require('./Greeting');
 const React = require('react');
 
-class App extends PureComponent {
+class App extends React.PureComponent {
   render() {
     return jsx`
       <div class="App">
