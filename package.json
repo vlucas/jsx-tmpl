@@ -1,0 +1,35 @@
+{
+  "name": "jsx-tmpl",
+  "version": "1.0.0",
+  "description": "Stop transpiling React components for Node with JSX templates, which use native es6 tagged template literals",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "jsx",
+    "react",
+    "react jsx",
+    "tagged template literal",
+    "es6 react"
+  ],
+  "author": "Vance Lucas <vance@vancelucas.com>",
+  "license": {
+    "type": "BSD-3-Clause"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/vlucas/jsx-tmpl"
+  },
+  "dependencies": {
+    "htmlparser2": "^3.9.2"
+  },
+  "devDependencies": {
+    "enzyme": "3.3.0",
+    "enzyme-adapter-react-16": "1.1.1",
+    "jest": "^21.2.1",
+    "raf": "3.4.0",
+    "react": "^16.0",
+    "react-dom": "^16.0"
+  }
+}
