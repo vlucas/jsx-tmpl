@@ -44,4 +44,43 @@ describe('toJSX on client', () => {
     expect(clickCount).toEqual(1);
   });
 
+  it('should be able to handle numeric props', () => {
+    let actual;
+    let expected = 2;
+    let Component = (props) => { actual = props.test; return null };
+    let ParentComponent = () => jsx`<Component test=${expected} />`(React, { Component });
+    let wrapper = mount(element(ParentComponent));
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should be able to handle boolean props', () => {
+    let actual;
+    let expected = false;
+    let Component = (props) => { actual = props.test; return null };
+    let ParentComponent = () => jsx`<Component test=${expected} />`(React, { Component });
+    let wrapper = mount(element(ParentComponent));
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should be able to handle object props', () => {
+    let actual;
+    let expected = { backgroundColor: 'blue' };
+    let Component = (props) => { actual = props.test; return null };
+    let ParentComponent = () => jsx`<Component test=${expected} />`(React, { Component });
+    let wrapper = mount(element(ParentComponent));
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should be able to handle object styles', () => {
+    let actual;
+    let expected = { backgroundColor: 'blue' };
+    let Component = () => jsx`<div style=${expected} />`(React);
+    let wrapper = mount(element(Component));
+
+    expect(wrapper.html()).toEqual('<div style="background-color: blue;"></div>');
+  });
+
 });

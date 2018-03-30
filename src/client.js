@@ -64,6 +64,8 @@ function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
       delete componentMap[tagComponentKey];
     }
 
+    console.log('[client] building element with props =', propsMap);
+
     // Check props for things in propsMap
     Object.keys(attributes).forEach(function(key) {
       let value = attributes[key];
@@ -103,8 +105,6 @@ function attrs(obj) {
 	for (key in obj) {
 		if (key == 'class') {
 			attribObj.className = obj[key];
-		} else if (key == 'style') {
-			attribObj.style = parseStyle(obj[key].split(';'));
 		} else if (key.match(regularKeys)[1]) {
 			attribObj[key] = obj[key];
 		} else if (key == 'for') {
@@ -125,42 +125,6 @@ function attrs(obj) {
  */
 function isEmptyObject(obj) {
 	return Object.getOwnPropertyNames(obj).length === 0;
-}
-
-/**
- * Parse style string into object
- *
- * @param {Object} obj
- * @return {Object}
- */
-function parseStyle(styles) {
-	var styleObj = {},
-		styleSplit;
-	if (!styles.length || !Array.isArray(styles)) {
-		return {};
-	}
-
-	styles.forEach(function(style) {
-		if (!style) {
-			return;
-		}
-		styleSplit = style.split(':');
-		styleObj[camelCase(styleSplit[0])] = styleSplit[1];
-	});
-
-	return styleObj;
-}
-
-/**
- * Convert CSS and other hyphenated properties to camelCase
- *
- * @param {String} input
- * @return {String}
- */
-function camelCase(input) {
-	return input.toLowerCase().replace(/-(.)/g, function(match, group1) {
-		return group1.toUpperCase();
-	});
 }
 
 module.exports = {

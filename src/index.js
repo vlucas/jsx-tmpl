@@ -40,7 +40,7 @@ function jsx(strings, ...values) {
     let value = values[index];
     let valueString;
 
-    if (typeof value === 'function') {
+    if (typeof value !== 'string') {
       let componentName = getNameFromFunction(value);
 
       propsMap[componentName] = value;
@@ -71,8 +71,6 @@ function jsxTmplResult(output, propsMap) {
 
     let result = client.render(h, output, propsMap, componentMap);
 
-    // console.log('render result =', result);
-
     return result;
   }
 }
@@ -84,9 +82,26 @@ function jsxTmplResult(output, propsMap) {
  * @return {string}
  */
 function getNameFromFunction(value) {
-  let componentName = (value.name || value.constructor.name || 'func') + '_' + randomString(25);
+  let valueString = isPojo(value) ? JSON.stringify(value) : value.toString(); // randomString(25)
+  let componentName = (value.name || value.constructor.name || 'func') + '_' + valueString;
 
   return componentName;
+}
+
+
+/**
+ * Is plain object?
+ *
+ * @link: https://github.com/bttmly/is-pojo/blob/master/lib/index.js
+ */
+var proto = Object.prototype;
+var gpo = Object.getPrototypeOf;
+
+function isPojo (obj) {
+  if (obj === null || typeof obj !== "object") {
+    return false;
+  }
+  return gpo(obj) === proto;
 }
 
 /**
