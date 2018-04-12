@@ -64,8 +64,6 @@ function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
       delete componentMap[tagComponentKey];
     }
 
-    console.log('[client] building element with props =', propsMap);
-
     // Check props for things in propsMap
     Object.keys(attributes).forEach(function(key) {
       let value = attributes[key];
@@ -77,6 +75,22 @@ function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
         attributes[key] = propsMap[propKey];
         delete propsMap[propKey];
       }
+    });
+
+    // Check for placeholders in string children
+    children = children.map(child => {
+      let data = child.data;
+
+      if (typeof data !== 'string') {
+        return child;
+      }
+
+      if (propsMap[data]) {
+        child.data = propsMap[data];
+        delete propsMap[data];
+      }
+
+      return child;
     });
 
     comp = h(tagName, attributes, children.map(c => traverseToVdom(h, c, propsMap, componentMap)));

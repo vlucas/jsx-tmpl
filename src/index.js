@@ -41,11 +41,11 @@ function jsx(strings, ...values) {
     let valueString;
 
     if (typeof value !== 'string') {
-      let componentName = getNameFromFunction(value);
+      let propPlaceholder = getPropPlaceholder(value);
 
-      propsMap[componentName] = value;
+      propsMap[propPlaceholder] = value;
 
-      valueString = componentName;
+      valueString = propPlaceholder;
     }
 
     if (valueString === undefined) {
@@ -81,37 +81,11 @@ function jsxTmplResult(output, propsMap) {
  * @param {function} value
  * @return {string}
  */
-function getNameFromFunction(value) {
-  let valueString = isPojo(value) ? JSON.stringify(value) : value.toString(); // randomString(25)
-  let componentName = (value.name || value.constructor.name || 'func') + '_' + valueString;
+let propIncrement = 0;
+function getPropPlaceholder(value) {
+  let propName = (value.name || value.constructor.name || typeof value) + '_' + ++propIncrement;
 
-  return componentName;
-}
-
-
-/**
- * Is plain object?
- *
- * @link: https://github.com/bttmly/is-pojo/blob/master/lib/index.js
- */
-var proto = Object.prototype;
-var gpo = Object.getPrototypeOf;
-
-function isPojo (obj) {
-  if (obj === null || typeof obj !== "object") {
-    return false;
-  }
-  return gpo(obj) === proto;
-}
-
-/**
- * Generate a random string
- *
- * @param {number} length
- * @return {string}
- */
-function randomString(length = 20) {
-  return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+  return propName;
 }
 
 module.exports = {
