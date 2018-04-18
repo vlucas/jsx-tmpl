@@ -4,6 +4,13 @@ Build JSX using native ES6 templates. No transpiling required for Node.js and mo
 * Returns strings for fast rendering on the server
 * Returns a full JSX virtual DOM on the client
 
+## Features
+
+* *Valid ES6 syntax* (no transpiling required for Node and modern browsers)
+* Caches JSX compilation for consecutive render() calls (so the HTML string is not converted to JSX on each render)
+* Converts HTML properties like "class" and "for" to required "className" and "htmlFor" for React
+* Use with *any React-compatible framework* (React, Preact, Inferno, etc.) or virtual DOM library
+
 ## Installation
 
 ```
@@ -52,6 +59,25 @@ class App extends React.PureComponent {
 }
 ```
 
-## Notes
-* **React v16.x or higher ONLY**. Previous version of react do not support rendering strings (for server rendering).
-* Alpha stability: This should not be used in production _yet_, as the client-side JSX gerneation is not cached or memoized yet, and thus is very likely to have slow client render times
+### Usage with Preact
+
+Since React is passed in as a parameter to the resulting render function, you
+can substitute it for [Preact](https://preactjs.com/), or any other virtual DOM
+library or React-compatible framework.
+
+```javascript
+const { jsx } = require('jsx-tmpl');
+const Preact = require('preact');
+
+class App extends Preact.Component {
+  render() {
+    let name = "John Doe";
+
+    return jsx`
+      <div class="App">
+        Hell World!
+      </div>
+    `(Preact); // Pass in Preact instead of React!
+  }
+}
+```
