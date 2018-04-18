@@ -84,3 +84,30 @@ describe('toJSX on client', () => {
   });
 
 });
+
+describe('jsx render cache', () => {
+
+  it('should return a cached function the second render so the HTML string will not have to be parsed every render', () => {
+    let renderFn = () => jsx`<div>Cache Test</div>`;
+    let result1 = renderFn(); // 1st call
+
+    expect(result1.fromCache).toBe(undefined);
+
+    let result2 = renderFn(); // 2nd call (should be from cache)
+
+    expect(result2.fromCache).toBe(true);
+  });
+
+  it('should properly pass props with render cache', () => {
+    let actual;
+    let expected = false;
+    let Component = (props) => { actual = props.test; return null };
+    let ParentComponent = () => jsx`<Component test=${expected} />`(React, { Component });
+
+    mount(element(ParentComponent));
+    mount(element(ParentComponent));
+
+    expect(actual).toEqual(expected);
+  });
+
+});

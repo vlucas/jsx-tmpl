@@ -1,8 +1,15 @@
+const shajs = require('sha.js');
 const client = require('./client');
 // const server = require('./server');
 
 // const IS_NODE = typeof module !== 'undefined' && this.module !== module;
 // const IS_BROWSER = !IS_NODE;
+
+/**
+ * Parsed, compiled template functions are kept here and re-used for
+ * consecutive re-renders instead of compiling the whole template every render
+ */
+const tmplCache = {};
 
 /**
  * Render template value as string
@@ -66,13 +73,25 @@ function jsx(strings, ...values) {
  * Return render function for components
  */
 function jsxTmplResult(output, propsMap) {
-  return function (vdom, componentMap) {
+  let tmplHash = shajs('sha256').update(output).digest('hex');
+
+  if (tmplCache[tmplHash] !== undefined) {
+    tmplCache[tmplHash].fromCache = true;
+    return tmplCache[tmplHash];
+  }
+
+  const tmplFn = function (vdom, componentMap) {
     const h = vdom.h || vdom.createElement;
 
     let result = client.render(h, output, propsMap, componentMap);
 
     return result;
-  }
+  };
+
+  // Add to cache
+  tmplCache[tmplHash] = tmplFn;
+
+  return tmplFn;
 }
 
 /**

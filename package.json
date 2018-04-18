@@ -22,7 +22,8 @@
     "url": "http://github.com/vlucas/jsx-tmpl"
   },
   "dependencies": {
-    "htmlparser2": "^3.9.2"
+    "htmlparser2": "^3.9.2",
+    "sha.js": "2.4.11"
   },
   "devDependencies": {
     "enzyme": "3.3.0",
