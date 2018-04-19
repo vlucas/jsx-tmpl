@@ -2,7 +2,7 @@
   "name": "jsx-tmpl",
   "version": "1.2.0",
   "description": "Stop transpiling React components for Node with JSX templates, which use native es6 tagged template literals",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest"
   },
