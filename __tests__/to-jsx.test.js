@@ -12,7 +12,7 @@ describe('toJSX on client', () => {
 
   it('should convert a single HTML tag to JSX', () => {
     let Component = () => jsx`<div>Test</div>`(React);
-    let wrapper = shallow(element(Component));
+    let wrapper = mount(element(Component));
 
     expect(wrapper.html()).toEqual('<div>Test</div>');
   });
@@ -81,6 +81,31 @@ describe('toJSX on client', () => {
     let wrapper = mount(element(Component));
 
     expect(wrapper.html()).toEqual('<div style="background-color: blue;"></div>');
+  });
+
+  it('should be able to render default create-react-app markup', () => {
+    class App extends React.Component {
+      render() {
+        let logo = 'img/logo.png';
+
+        return jsx`
+          <div className="App">
+            <header className="App-header">
+              <img src=${logo} className="App-logo" alt="logo" />
+              <h1 className="App-title">Welcome to React</h1>
+            </header>
+            <p className="App-intro">
+              To get started, edit <code>src/App.js</code> and save to reload.
+            </p>
+          </div>
+        `(React);
+      }
+    }
+
+    // let wrapper = mount(element(App));
+    let html = toString(element(App));
+
+    expect(html).toEqual('<div class="App"><header class="App-header"><img src="img/logo.png" class="App-logo" alt="logo"/><h1 class="App-title">Welcome to React</h1></header><p class="App-intro">To get started, edit<code>src/App.js</code>and save to reload.</p></div>');
   });
 
 });

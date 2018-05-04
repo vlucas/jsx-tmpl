@@ -1,4 +1,5 @@
 const htmlparser = require('htmlparser2');
+let tagKey = 0;
 
 /**
  * Render for the client (build a virtual DOM)
@@ -44,14 +45,19 @@ function parseHTMLToDOM(html) {
  */
 function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
 	if (Array.isArray(obj)) {
-		obj = obj[0];
+    return obj
+      .filter(t => t)
+      .map(tag => traverseToVdom(h, tag, propsMap, componentMap));
 	}
+
+  if (!obj) {
+    return;
+  }
 
 	var type = obj.type,
 		tagName = obj.name,
 		children = obj.children,
-		comp,
-		tagArray = [tagName];
+		comp;
 
   delete obj.next;
   delete obj.prev;
@@ -97,9 +103,14 @@ function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
       return child;
     });
 
+    // Always use a key if not present
+    if (attributes.key === undefined) {
+      attributes.key = '__jsx-tmpl-key-' + (++tagKey);
+    }
+
     let nodeChildren = children.map(c => traverseToVdom(h, c, propsMap, componentMap));
 
-    comp = h(tagName, attributes, nodeChildren);
+    comp = h(tagName, attributes, nodeChildren.length > 0 ? nodeChildren : null);
 	} else if (type == 'text' ) {
 		comp = replacePropsInTextNode(obj.data, propsMap);
 	}
@@ -126,7 +137,18 @@ function replacePropsInTextNode(text, props) {
     textParts = [text];
   }
 
-  return textParts;
+  // Return text parts trimmed and cleaned up
+  return textParts
+    .map(text => {
+      if (typeof text !== 'string') {
+        return text;
+      }
+
+      return text
+        .replace('\n', '')
+        .trim()
+    })
+    .filter(t => t);
 }
 
 /**
