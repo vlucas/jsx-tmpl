@@ -85,17 +85,48 @@ describe('toJSX on client', () => {
 
 });
 
+describe('React renderToStaticMarkup', () => {
+  it('should render component to static markup', () => {
+    let actual;
+    let expected = { backgroundColor: 'blue' };
+    let Component = () => jsx`<div style=${expected} />`(React);
+    let html = toString(element(Component));
+
+    expect(html).toEqual('<div style="background-color:blue"></div>');
+  });
+
+  it('should render component to static markup that equals React.createElement()', () => {
+    let actual;
+    let expected = { backgroundColor: 'blue' };
+    let Component = () => jsx`<div style=${expected} />`(React);
+    let Component2 = () => element('div', { style: expected });
+    let html1 = toString(element(Component));
+    let html2 = toString(element(Component2));
+
+    expect(html1).toEqual(html2);
+  });
+
+  it('should render toString', () => {
+    let actual;
+    let expected = { backgroundColor: 'blue' };
+    let Component = () => jsx`<div style=${expected} />`(React);
+    let html = toString(Component());
+
+    expect(html).toEqual('<div style="background-color:blue"></div>');
+  });
+});
+
 describe('jsx render cache', () => {
 
-  it('should return a cached function the second render so the HTML string will not have to be parsed every render', () => {
-    let renderFn = () => jsx`<div>Cache Test</div>`;
-    let result1 = renderFn(); // 1st call
+  it('should render twice with different prop values (from cache 2nd time)', () => {
+    let renderFn = (props) => jsx`<div>Cache Test ${props.number}</div>`(React);
+    let result1 = renderFn({ number: 1 }); // 1st call
+    let result2 = renderFn({ number: 2 }); // 2nd call (should be from cache)
 
-    expect(result1.fromCache).toBe(undefined);
+    let html1 = toString(result1);
+    let html2 = toString(result2);
 
-    let result2 = renderFn(); // 2nd call (should be from cache)
-
-    expect(result2.fromCache).toBe(true);
+    expect(html2).not.toEqual(html1);
   });
 
   it('should properly pass props with render cache', () => {

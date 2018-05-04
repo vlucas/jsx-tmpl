@@ -53,6 +53,10 @@ function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
 		comp,
 		tagArray = [tagName];
 
+  delete obj.next;
+  delete obj.prev;
+  delete obj.parent;
+
 	if (type == 'tag') {
     let attributes = attrs(obj.attribs);
 
@@ -93,12 +97,36 @@ function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
       return child;
     });
 
-    comp = h(tagName, attributes, children.map(c => traverseToVdom(h, c, propsMap, componentMap)));
+    let nodeChildren = children.map(c => traverseToVdom(h, c, propsMap, componentMap));
+
+    comp = h(tagName, attributes, nodeChildren);
 	} else if (type == 'text' ) {
-		comp = obj.data;
+		comp = replacePropsInTextNode(obj.data, propsMap);
 	}
 
 	return comp;
+}
+
+function replacePropsInTextNode(text, props) {
+  let propKeys = Object.keys(props);
+  let textParts = [];
+
+  propKeys.forEach(key => {
+    if (text.includes(key)) {
+      keyParts = text.split(key);
+      keyParts.splice(1, 0, props[key]);
+
+      textParts = textParts.concat(keyParts);
+      delete props[key];
+    }
+  });
+
+  // No placeholders found in text
+  if (textParts.length === 0) {
+    textParts = [text];
+  }
+
+  return textParts;
 }
 
 /**

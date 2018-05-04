@@ -75,23 +75,21 @@ function jsx(strings, ...values) {
 function jsxTmplResult(output, propsMap) {
   let tmplHash = shajs('sha256').update(output).digest('hex');
 
-  if (tmplCache[tmplHash] !== undefined) {
-    tmplCache[tmplHash].fromCache = true;
-    return tmplCache[tmplHash];
-  }
-
-  const tmplFn = function (vdom, componentMap) {
+  return function(vdom, componentMap) {
     const h = vdom.h || vdom.createElement;
+
+    if (tmplCache[tmplHash] !== undefined) {
+      tmplCache[tmplHash].fromCache = true;
+      return tmplCache[tmplHash];
+    }
 
     let result = client.render(h, output, propsMap, componentMap);
 
+    // Add to cache
+    tmplCache[tmplHash] = result;
+
     return result;
   };
-
-  // Add to cache
-  tmplCache[tmplHash] = tmplFn;
-
-  return tmplFn;
 }
 
 /**
@@ -104,7 +102,7 @@ let propIncrement = 0;
 function getPropPlaceholder(value) {
   let propName = (value.name || value.constructor.name || typeof value) + '_' + ++propIncrement;
 
-  return propName;
+  return '[[' + propName + ']]';
 }
 
 module.exports = {
