@@ -118,6 +118,7 @@ function traverseToVdom(h, obj, propsMap = {}, componentMap = {}) {
 	return comp;
 }
 
+const REGEX_ONLY_EMPTY_SPACES = /^\s+$/;
 function replacePropsInTextNode(text, props) {
   let propKeys = Object.keys(props);
   let textParts = [];
@@ -144,9 +145,16 @@ function replacePropsInTextNode(text, props) {
         return text;
       }
 
-      return text
+      text = text
         .replace('\n', '')
-        .replace(/\s+/g, ' ');
+        .replace(/\s+/g, ' ')
+
+      // If string is entirely empty spaces, return null (will be filtered out)
+      if (REGEX_ONLY_EMPTY_SPACES.test(text)) {
+        return null;
+      }
+
+      return text;
     })
     .filter(t => t);
 }
