@@ -105,7 +105,7 @@ describe('toJSX on client', () => {
     // let wrapper = mount(element(App));
     let html = toString(element(App));
 
-    expect(html).toEqual('<div class="App"><header class="App-header"><img src="img/logo.png" class="App-logo" alt="logo"/><h1 class="App-title">Welcome to React</h1></header><p class="App-intro">To get started, edit<code>src/App.js</code>and save to reload.</p></div>');
+    expect(html).toEqual(' <div class="App"> <header class="App-header"> <img src="img/logo.png" class="App-logo" alt="logo"/> <h1 class="App-title">Welcome to React</h1> </header> <p class="App-intro"> To get started, edit <code>src/App.js</code> and save to reload. </p> </div>');
   });
 
 });

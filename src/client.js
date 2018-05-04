@@ -146,7 +146,7 @@ function replacePropsInTextNode(text, props) {
 
       return text
         .replace('\n', '')
-        .trim()
+        .replace(/\s+/g, ' ');
     })
     .filter(t => t);
 }
