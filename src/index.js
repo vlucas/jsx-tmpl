@@ -76,7 +76,7 @@ function jsxTmplResult(output, propsMap) {
   let tmplHash = shajs('sha256').update(output).digest('hex');
 
   return function(vdom, componentMap) {
-    const h = vdom.h || vdom.createElement;
+    const h = vdom.h || vdom.createElement || vdom;
 
     if (tmplCache[tmplHash] !== undefined) {
       tmplCache[tmplHash].fromCache = true;
